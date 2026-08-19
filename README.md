@@ -1,91 +1,223 @@
-# 📚 Desktop Library Management System
+# 📚 Library Management System
 
-A robust, enterprise-grade Desktop Library Management Application built with Java Swing (GUI) and PostgreSQL. This system implements professional software engineering principles, including secure multi-window navigation, dynamic data rendering via JTable, and strict ACID Transaction Management for inventory tracking.
+A desktop-based Library Management System built with **Java Swing** and **PostgreSQL**, providing book and member management, borrowing and returning workflows, and database transaction handling.
 
----
+## ✨ Features
 
-## 🚀 Key Features
+* 🔐 User authentication
+* 📚 Book management
+* 👥 Member management
+* 📖 Book borrowing and returning
+* 🔄 Automatic available-copy management
+* 📊 Dynamic book and member tables
+* 🛡️ Database transaction handling with rollback on errors
+* ⚠️ Input validation and exception handling
 
-* Secure Authentication: User login system connecting to database credentials.
-* Interactive Dashboard: A professional 3x2 grid layout Admin Panel for librarians to manage daily operations seamlessly.
-* Dynamic Data Views: Live database-to-GUI synchronization using custom DefaultTableModel for both Books and Members.
-* ACID Transactions: Automated stock management. Loaning a book decreases available_copies by 1, and returning it increases it back by 1 safely within SQL transactions (`conn.setAutoCommit(false)`) with full rollback support on failures.
+## 🏗️ Architecture
 
----
+The application follows a layered structure inspired by the **MVC pattern**, separating the user interface, application flow, domain models, and database access.
 
-## 🏗️ Architecture & Design
+```text
+┌─────────────────────────┐
+│       View Layer        │
+│      Java Swing UI      │
+└────────────┬────────────┘
+             │
+             ▼
+┌─────────────────────────┐
+│    Controller Layer     │
+│    Application Flow     │
+└────────────┬────────────┘
+             │
+             ▼
+┌─────────────────────────┐
+│    Repository Layer     │
+│       JDBC / SQL        │
+└────────────┬────────────┘
+             │
+             ▼
+┌─────────────────────────┐
+│       PostgreSQL        │
+└─────────────────────────┘
+```
 
-The project follows a clean segregation of concerns loosely inspired by the MVC (Model-View-Controller) pattern:
-* `view/`: Contains pure GUI layouts (`JFrame`, JPanel, JTable`) powered by Java Swing (e.g., `AdminDashboard, `ViewMembersView`).
-* `model/`: Represents core entity structures (e.g., Borrow, Book, `Member`).
-* `repository/`: Handles pure JDBC queries, connection lifecycles, and database transaction rollbacks.
+## 📁 Project Structure
 
----
+```text
+src/
+├── controller/
+│   ├── BookController.java
+│   ├── BorrowController.java
+│   └── MemberController.java
+│
+├── model/
+│   ├── Book.java
+│   ├── Borrow.java
+│   └── Member.java
+│
+├── repository/
+│   ├── BookRepository.java
+│   ├── BorrowRepository.java
+│   ├── DatabaseConnection.java
+│   └── MemberRepository.java
+│
+├── view/
+│   ├── AddBookView.java
+│   ├── AddMemberView.java
+│   ├── AdminDashboard.java
+│   ├── IssueBookView.java
+│   ├── LoginView.java
+│   ├── ReturnBookView.java
+│   ├── ViewBooksView.java
+│   └── ViewMembersView.java
+│
+└── Main.java
+```
 
-## 🛠️ Tech Stack & Prerequisites
+## 🛠️ Tech Stack
 
-* Language: Java (JDK 17 or higher)
-* GUI Framework: Java Swing / AWT
-* Database: PostgreSQL 15+
-* Driver: JDBC PostgreSQL Driver (JAR)
+### Application
 
----
+* **Java**
+* **Java Swing / AWT**
+* **JDBC**
 
-## 🗄️ Database Schema Quick Look
+### Database
 
-Here is the exact database structure used in this project:
--- 1. Books Table
-CREATE TABLE books (
-    book_id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    author VARCHAR(255),
-    isbn VARCHAR(50),
-    available_copies INT DEFAULT 1
-);
+* **PostgreSQL**
+* **SQL**
+* Relational Database Design
 
--- 2. Members Table
-CREATE TABLE members (
-    member_id SERIAL PRIMARY KEY,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    phone VARCHAR(15),
-    join_date DATE DEFAULT CURRENT_DATE
-);
+### Development
 
--- 3. Borrows Table (With Foreign Keys)
-CREATE TABLE borrows (
-    borrow_id SERIAL PRIMARY KEY,
-    member_id INT REFERENCES members(member_id),
-    book_id INT REFERENCES books(book_id),
-    borrow_date DATE DEFAULT CURRENT_DATE,
-    return_date DATE,
-    status VARCHAR(50) DEFAULT 'BORROWED'
-);
+* **Git**
+* **GitHub**
+* **IntelliJ IDEA**
 
-## 🏁 How to Run the Project
-Follow these steps to set up and run the application on your local machine (Ubuntu/Linux or any OS):
-### 1. Clone the Repositorygit clone git@github.com:Farzaneh-Nasrabadii/Library-Management-System.git
-cd Library-Management-System
+## 🧠 Skills Demonstrated
 
-### 2. Database Setup
- 1. Open pgAdmin or PostgreSQL CLI.
- 2. Create a new database named library_db.
- 3. Execute the SQL schema queries provided in the Database Schema section above to create the tables.
- 4. Insert at least one admin credential or sample data if needed.
-### 3. Configure Connection
-Open src/repository/DatabaseConnection.java and update your PostgreSQL credentials:private static final String URL = "jdbc:postgresql://localhost:5432/library_db";
-private static final String USER = "your_postgres_username";
-private static final String PASSWORD = "your_postgres_password";
+* Object-Oriented Programming (OOP)
+* Java GUI Development
+* JDBC & SQL
+* PostgreSQL Database Management
+* CRUD Operations
+* Layered Architecture
+* MVC-inspired Design
+* Repository Pattern
+* Database Transactions
+* Exception Handling
+* Relational Database Design
+* Git & GitHub
 
-### 4. Compile and Run via IDE (Recommended)
- 1. Open the project folder in IntelliJ IDEA, Eclipse, or VS Code.
- 2. Make sure the PostgreSQL JDBC Driver (.jar) is added to your project's libraries/dependencies.
- 3. Right-click on Main.java (or your initial login view window file) and select Run.
-### 5. Compile and Run via Terminal (Ubuntu)
-If you prefer running it directly from the terminal, navigate to the project root and run:
+## 🗄️ Database Design
+
+The application uses PostgreSQL as its relational database.
+
+### Main Entities
+
+**Books**
+
+* Book ID
+* Title
+* Author
+* ISBN
+* Available Copies
+
+**Members**
+
+* Member ID
+* Full Name
+* Phone
+* Join Date
+
+**Borrows**
+
+* Borrow ID
+* Member ID
+* Book ID
+* Borrow Date
+* Return Date
+* Status
+
+### Relationships
+
+```text
+Members 1 ──────────── * Borrows * ──────────── 1 Books
+```
+
+The borrowing workflow connects members with books and keeps track of borrowing and return information.
+
+## 📸 Screenshots
+
+### 🔐 Authentication
+
+![Login](screenshots/login.png)
+
+### 🖥️ Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+### 📚 Book & Member Management
+
+![Books](screenshots/books.png)
+
+![Members](screenshots/members.png)
+
+### 📖 Borrowing Workflow
+
+![Borrow Book](screenshots/borrow-book.png)
+
+![Return Book](screenshots/return-book.png)
+
+### ➕ Data Entry
+
+![Add Book](screenshots/add-book.png)
+
+![Add Member](screenshots/add-member.png)
+
+## 🚀 How to Run
+
+### Prerequisites
+
+Make sure the following are installed:
+
+* Java JDK
+* PostgreSQL
+* IntelliJ IDEA or another Java IDE
+
+### 1. Clone the repository
+
 ```bash
-# Compile all java files and include the JDBC driver in the classpath
-javac -cp .:postgresql*.jar -d bin src/**/*.java
+git clone https://github.com/Farzaneh-Nasrabadii/Library-Management-System.git
+cd Library-Management-System
+```
 
-# Run the application
-java -cp bin:postgresql*.jar view.LoginView
+### 2. Configure PostgreSQL
+
+Create a PostgreSQL database and configure the database connection in:
+
+```text
+src/repository/DatabaseConnection.java
+```
+
+### 3. Create the database tables
+
+Create the required tables for:
+
+* Books
+* Members
+* Borrows
+
+### 4. Run the application
+
+Run:
+
+```text
+src/Main.java
+```
+
+The application will launch the login screen.
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
